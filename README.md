@@ -1,9 +1,9 @@
 # Llama3_finetuning
 This repo is a tutorial of Llama3.0 finetuning for Google DSC, Korea Univ. <br>
-You can finetune Meta's open LLM, **Llama3-70B** with custom GPUs (24G VRAM)
+You can finetune Meta's open LLM, **Llama3-70B** with consumer GPUs (24G VRAM)
 
 ## Efficiently scale distributed training
-* Model: Llama 3-70B
+* Model: Llama3-70B
 * Strategy: PyTorch FSDP and Q-LoRA
 
 ## 1. Installation
@@ -31,14 +31,14 @@ We will use the [HuggingFaceH4/no_robots dataset](https://huggingface.co/dataset
 The dataset will be downloaded by the *Datasets library*.
 
 ## 3. Finetune the Llama3 with PyTorch FSDP, Q-LoRA
-Since our code is optimized for 4 GPUs, you need to adjust your settings. Also, you need to use ```torchrun``` for finetuning as we are running in a distributed training.
+Since our code is optimized for 4 GPUs, you may need to adjust your settings. Also, you need to use ```torchrun``` for finetuning as we are running in a distributed manner.
 For ```torchrun``` and FSDP we need to set the environment variable ```ACCELERATE_USE_FSDP``` and ```FSDP_CPU_RAM_EFFICIENT_LOADING``` to tell transformers/accelerate to use FSDP and load the model in a memory-efficient way. <br>
 
-*Note: To NOT CPU offloading you need to change the value of fsdp and remove offload. This only works on > 40GB GPUs since it requires more memory.* <br>
+*Note: To NOT CPU offloading, you need to change the value of fsdp and remove CPU offloading. This is only available on > 40GB GPUs since it requires more memory.* <br>
 
 Now, start your finetuning with the following command 🚀:
 ```
-ACCELERATE_USE_FSDP=1 FSDP_CPU_RAM_EFFICIENT_LOADING=1 torchrun --nproc_per_node=4 ./scripts/run_fsdp_qlora.py --config llama_3_70b_fsdp_qlora.yaml
+ACCELERATE_USE_FSDP=1 FSDP_CPU_RAM_EFFICIENT_LOADING=1 torchrun --nproc_per_node=4 run_fsdp_qlora.py --config llama_3_70b_fsdp_qlora.yaml
 ```
 ### Expected Memory usage:
 
